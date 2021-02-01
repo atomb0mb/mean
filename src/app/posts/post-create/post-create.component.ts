@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 
 @Component({
     selector: 'app-post-create',
@@ -6,11 +7,11 @@ import { Component } from "@angular/core";
     styleUrls: []
 })
 export class PostCreateComponent {
+    enteredValue = '';
     newPost = 'N/A';
 
-    onAddPost(input: HTMLTextAreaElement){
-        console.dir(input);
-        this.newPost = input.value;
+    onAddPost(){
+        this.newPost = this.enteredValue;
     }
     
 }
