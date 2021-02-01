@@ -6,9 +6,11 @@ import { Component } from "@angular/core";
     styleUrls: []
 })
 export class PostCreateComponent {
+    newPost = 'N/A';
 
-
-    onAddPost(){
-        alert('Post added!')
+    onAddPost(input: HTMLTextAreaElement){
+        console.dir(input);
+        this.newPost = input.value;
     }
+    
 }
