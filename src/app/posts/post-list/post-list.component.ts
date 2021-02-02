@@ -1,5 +1,6 @@
 import { Component, Input} from '@angular/core';
 import { Post } from '../post.model';
+import { PostService } from '../post.service';
 
 @Component({
     selector: 'app-post-list',
@@ -9,12 +10,15 @@ import { Post } from '../post.model';
 
 
 export class PostListComponent {
-    // posts = [
-    //     {title: '1st post', content: 'Yup'},
-    //     {title: '2nd post', content: 'You\'re'},
-    //     {title: '3rd post', content: 'right'}
-    // ]
+
     @Input() posts: Post[] = []; // taking the input from app component such as storedposts 
+    // postService: PostService;
+
+    //added public keyword thhus no need to create declare and initalize in contstructor. This is typescript feature.
+    constructor(public postService: PostService){
+        // this.postService = postService;
+        
+    }
    
 }
 

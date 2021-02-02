@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { PostCreateComponent } from './posts/post-create/post-create.component';
 import { HeaderComponent } from './header/header.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
+import { PostService } from './posts/post.service';
 
 
 
@@ -21,7 +22,8 @@ import { PostListComponent } from './posts/post-list/post-list.component';
     AppComponent,
     PostCreateComponent,
     HeaderComponent,
-    PostListComponent
+    PostListComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -33,7 +35,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
     MatExpansionModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [PostService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
