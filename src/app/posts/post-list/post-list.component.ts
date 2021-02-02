@@ -1,6 +1,7 @@
-import { Component, Input} from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Post } from '../post.model';
 import { PostService } from '../post.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-post-list',
@@ -9,15 +10,27 @@ import { PostService } from '../post.service';
 })
 
 
-export class PostListComponent {
-
-    @Input() posts: Post[] = []; // taking the input from app component such as storedposts 
+export class PostListComponent implements OnInit,OnDestroy {
+    private postSubscription: Subscription;
+    posts: Post[] = []; // taking the input from app component such as storedposts 
     // postService: PostService;
 
     //added public keyword thhus no need to create declare and initalize in contstructor. This is typescript feature.
     constructor(public postService: PostService){
         // this.postService = postService;
         
+    }
+
+    ngOnInit(){
+        this.posts = this.postService.getPosts();
+
+        this.postSubscription = this.postService.getPostUpdateListener().subscribe((subposts: Post[]) => {
+            this.posts = subposts;
+        })
+    }
+
+    ngOnDestroy(){
+        this.postSubscription.unsubscribe();
     }
    
 }
