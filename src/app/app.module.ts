@@ -1,7 +1,10 @@
+
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+
 
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
@@ -31,6 +34,7 @@ import { PostService } from './posts/post.service';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    HttpClientModule,
     MatToolbarModule,
     MatExpansionModule,
     BrowserAnimationsModule
