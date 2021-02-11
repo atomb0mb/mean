@@ -17,20 +17,23 @@ export class PostService {
 
     //subscribe is just asyschronous stuff
     getPosts(){
-        this.http.get<{message: string, posts: any}>(this.localPath +'/api/posts')
-            .pipe(map((postData) => {
-                return postData.posts.map( post => {
-                    return {
-                        title: post.title,
-                        content: post.content,
-                        id: post._id
-                    }
-                })
-            }))
-            .subscribe((transformedPostData)=> {
-             this.posts = transformedPostData.posts;
-             this.postUpdated.next([...this.posts]);
-            });
+        this.http
+        .get<{ message: string; posts: any }>(
+          "http://localhost:3000/api/posts"
+        )
+        .pipe(map((postData) => {
+          return postData.posts.map(post => {
+            return {
+              title: post.title,
+              content: post.content,
+              id: post._id
+            };
+          });
+        }))
+        .subscribe(transformedPosts => {
+          this.posts = transformedPosts;
+          this.postUpdated.next([...this.posts]);
+        });
     }
 
     addPost(title: string, content: string){
@@ -39,7 +42,7 @@ export class PostService {
             title: title,
             content: content
         }
-        this.http.post<{message: string}>('http://localhost:3000/api/posts', post)
+        this.http.post<{message: string}>(this.localPath + '/api/posts', post)
             .subscribe((respondData)=> {
                 console.log(respondData.message);
                 this.posts.push(post);
@@ -50,5 +53,12 @@ export class PostService {
 
     getPostUpdateListener(){
         return this.postUpdated.asObservable();
+    }
+
+    deletePost(postId: string) {
+        this.http.delete('http://localhost:3000/api/posts/' + postId)
+        .subscribe(() => {
+            console.log('Deleted!');
+        })
     }
 }
