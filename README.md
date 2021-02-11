@@ -18,3 +18,6 @@ Pre-req: Log into account
 3. Enter password 
 4. Use 'help' to see command
 5. Eg. 'db.posts.find()'
+
+Mongoose
+[QUERIES](https://mongoosejs.com/docs/api/query.html)

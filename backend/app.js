@@ -48,14 +48,15 @@ app.post('/api/posts', (req, res, next) => {
 })
 
 app.use('/api/posts', (req, res, next) =>{
-    const posts = [
-        {id: '1001', title: 'Dummy #1', content: 'Data from server'},
-        {id: '1002', title: 'Dummy #2', content: 'Data from server'}
-    ];
-    res.status(200).json({
-        message: 'Posts fetched successfully',
-        posts: posts
-    });
+    Post.find().then(document =>{
+        res.status(200).json({
+            message: 'Posts fetched successfully',
+            posts: document
+        });
+        console.log(document)
+
+    })
+
 
 });
 
