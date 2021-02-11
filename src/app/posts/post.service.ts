@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Post } from './post.model';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({providedIn: 'root'}) // This is alternative solution for adding postService in app module provider
@@ -16,9 +17,18 @@ export class PostService {
 
     //subscribe is just asyschronous stuff
     getPosts(){
-        this.http.get<{message: string, posts: Post[]}>(this.localPath +'/api/posts')
-            .subscribe((postData)=> {
-             this.posts = postData.posts;
+        this.http.get<{message: string, posts: any}>(this.localPath +'/api/posts')
+            .pipe(map((postData) => {
+                return postData.posts.map( post => {
+                    return {
+                        title: post.title,
+                        content: post.content,
+                        id: post._id
+                    }
+                })
+            }))
+            .subscribe((transformedPostData)=> {
+             this.posts = transformedPostData.posts;
              this.postUpdated.next([...this.posts]);
             });
     }
