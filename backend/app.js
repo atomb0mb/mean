@@ -9,10 +9,9 @@ const key = require('./key');
 
 
 // username & password need to be replace 
-mongoose.connect('mongodb+srv://dbusr:'+ key.dbaccess.password +'@cluster0.xil5u.mongodb.net/<dbname>?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://dbusr:'+ key.dbaccess.password +'@cluster0.xil5u.mongodb.net/node-angular?retryWrites=true&w=majority')
 .then(() => {
     console.log('Connected to database')
-
 })
 .catch(() => {
     console.log('Connection failed.')
@@ -40,6 +39,7 @@ app.post('/api/posts', (req, res, next) => {
         content: req.body.content
     });
     console.log(post);
+    post.save();
     res.status(201).json({
         message: 'Post added successfully',
         posts: post
