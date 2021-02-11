@@ -42,9 +42,11 @@ export class PostService {
             title: title,
             content: content
         }
-        this.http.post<{message: string}>(this.localPath + '/api/posts', post)
+        this.http.post<{message: string, postId: string}>(this.localPath + '/api/posts', post)
             .subscribe((respondData)=> {
                 console.log(respondData.message);
+                const id = respondData.postId;
+                post.id = id;
                 this.posts.push(post);
                 this.postUpdated.next([...this.posts]);
             });
