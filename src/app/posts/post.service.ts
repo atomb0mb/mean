@@ -35,7 +35,7 @@ export class PostService {
           this.postUpdated.next([...this.posts]);
         });
     }
-
+    // add a new post
     addPost(title: string, content: string){
         const post: Post = {
             id: null ,
@@ -52,12 +52,18 @@ export class PostService {
             });
         
     }
-
+    // Update the post in edit mode 
     updatePost(id: string, title: string, content: string) {
       const post: Post = { id: id, title: title, content: content};
       this.http.put(this.localPath + '/api/posts/' + id, post)
-      .subscribe(() => {
-        console.log('sub updated');
+      .subscribe(respond => {
+        //mainly update the list
+        const updatedPosts = [...this.posts];
+        const oldPostindex = updatedPosts.findIndex(p => p.id === id);
+        updatedPosts[oldPostindex] = post;
+        this.posts = updatedPosts;
+        
+        this.postUpdated.next([...this.posts]);
       })
     }
 
@@ -77,7 +83,7 @@ export class PostService {
         p.id === id
       )}
     }
-
+    // delete the post
     deletePost(postId: string) {
         this.http.delete(this.localPath + '/api/posts/' + postId)
         .subscribe(() => {
