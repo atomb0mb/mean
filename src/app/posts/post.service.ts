@@ -62,7 +62,7 @@ export class PostService {
         const oldPostindex = updatedPosts.findIndex(p => p.id === id);
         updatedPosts[oldPostindex] = post;
         this.posts = updatedPosts;
-        
+        // the ... to avoid manipulate the actual object in the array
         this.postUpdated.next([...this.posts]);
       })
     }
@@ -73,15 +73,7 @@ export class PostService {
 
     // Check if get post id is equal to post id in the array
     getPost(id: string) {
-      // the ... to avoid manipulate the actual object in the array
-      //to check output..
-      // const temp = {...this.posts.find(p => 
-      //   p.id === id
-      // )}
-      // console.log(temp);
-      return {...this.posts.find(p => 
-        p.id === id
-      )}
+      return this.http.get<{_id: string, title: string, content: string}>(this.localPath + '/api/posts/' + id);
     }
     // delete the post
     deletePost(postId: string) {
