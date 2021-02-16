@@ -53,8 +53,29 @@ export class PostService {
         
     }
 
+    updatePost(id: string, title: string, content: string) {
+      const post: Post = { id: id, title: title, content: content};
+      this.http.put(this.localPath + '/api/posts/' + id, post)
+      .subscribe(() => {
+        console.log('sub updated');
+      })
+    }
+
     getPostUpdateListener(){
         return this.postUpdated.asObservable();
+    }
+
+    // Check if get post id is equal to post id in the array
+    getPost(id: string) {
+      // the ... to avoid manipulate the actual object in the array
+      //to check output..
+      // const temp = {...this.posts.find(p => 
+      //   p.id === id
+      // )}
+      // console.log(temp);
+      return {...this.posts.find(p => 
+        p.id === id
+      )}
     }
 
     deletePost(postId: string) {

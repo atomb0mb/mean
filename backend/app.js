@@ -49,6 +49,24 @@ app.post('/api/posts', (req, res, next) => {
 
 })
 
+
+app.put('/api/posts/:id', (req, res, next) => {
+    const newPost = new Post({
+        _id: req.body.id,
+        title: req.body.title,
+        content: req.body.content
+    })
+    Post.updateOne({_id: req.params.id}, newPost ).then( result => {
+        console.log(result)
+        res.status(200).json({
+            message: 'Post updated successfully',
+        });
+    })
+    
+
+})
+
+
 app.get('/api/posts', (req, res, next) =>{
     Post.find().then(document =>{
         res.status(200).json({
