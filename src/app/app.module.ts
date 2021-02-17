@@ -1,8 +1,8 @@
 
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 
@@ -32,14 +32,16 @@ import { AppRoutingModule } from './app-routing.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+
     MatInputModule,
     MatCardModule,
     MatButtonModule,
-    HttpClientModule,
     MatToolbarModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
+
     BrowserAnimationsModule
   ],
   providers: [PostService],
