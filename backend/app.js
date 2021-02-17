@@ -7,8 +7,9 @@ const app = express();
 const key = require('./key');
 const postRoutes = require('./routes/posts');
 
+
 // username & password need to be replace 
-mongoose.connect('mongodb+srv://dbusr:'+ key.dbaccess.password +'@cluster0.xil5u.mongodb.net/node-angular?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://dbusr:'+ key.dbaccess.password +'@cluster0.xil5u.mongodb.net/node-angular?retryWrites=true&w=majority', { useNewUrlParser: true })
 .then(() => {
     console.log('Connected to database')
 })

@@ -4,6 +4,7 @@ import { Post } from './post.model';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({providedIn: 'root'}) // This is alternative solution for adding postService in app module provider
 export class PostService {
@@ -11,7 +12,7 @@ export class PostService {
     private postUpdated = new Subject<Post[]>();
     private localPath = 'http://localhost:3000';
 
-    constructor(private http: HttpClient ){
+    constructor(private http: HttpClient, private router: Router ){
  
     }
 
@@ -49,6 +50,7 @@ export class PostService {
                 post.id = id;
                 this.posts.push(post);
                 this.postUpdated.next([...this.posts]);
+                this.router.navigate(['/']);
             });
         
     }
@@ -79,7 +81,7 @@ export class PostService {
     deletePost(postId: string) {
         this.http.delete(this.localPath + '/api/posts/' + postId)
         .subscribe(() => {
-            const updatedPosts =  this.posts.filter(post => post.id !== postId);
+            const updatedPosts = this.posts.filter(post => post.id !== postId);
             this.posts = updatedPosts;
             this.postUpdated.next([...this.posts]);
         })
