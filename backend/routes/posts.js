@@ -53,11 +53,17 @@ router.post('', multer({storage: storage}).single("image"),(req, res, next) => {
 })
 
 // update or edit the selected post with unique id
-router.put('/:id', (req, res, next) => {
+router.put('/:id', multer({storage: storage}).single("image"), (req, res, next) => {
+    let imageUrl = req.body.imagePath;
+    if(req.file) {
+        const url = req.protocol + '://' + req.get("host");
+        imageUrl = url + "/images/" + req.file.filename;
+    }
     const newPost = new Post({
         _id: req.body.id,
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        imagePath: imageUrl 
     })
     Post.updateOne({_id: req.params.id}, newPost ).then( result => {
         res.status(200).json({

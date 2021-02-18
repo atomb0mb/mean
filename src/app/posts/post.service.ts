@@ -55,17 +55,33 @@ export class PostService {
         
     }
     // Update the post in edit mode 
-    updatePost(id: string, title: string, content: string, image: File) {
-      const post: Post = { id: id, title: title, content: content, imagePath: ''};
-      this.http.put(this.localPath + '/api/posts/' + id, post)
+    updatePost(id: string, title: string, content: string, image: File | string ) {
+      let postData: Post | FormData;
+      if(typeof(image) === 'object') {
+        postData = new FormData();
+        postData.append("id", id); 
+        postData.append("title", title);
+        postData.append("content", content);
+        postData.append("image", image, title);
+      } else {
+        postData = {
+          id: id,
+          title: title, 
+          content: content,
+          imagePath: image
+        }
+      }
+      this.http.put(this.localPath + '/api/posts/' + id, postData)
       .subscribe(respond => {
         //mainly update the list
         const updatedPosts = [...this.posts];
         const oldPostindex = updatedPosts.findIndex(p => p.id === id);
+        const post: Post = { id: id, title: title, content: content, imagePath: ''};
         updatedPosts[oldPostindex] = post;
         this.posts = updatedPosts;
         // the ... to avoid manipulate the actual object in the array
         this.postUpdated.next([...this.posts]);
+        this.router.navigate(["/"]);
       })
     }
 
@@ -75,7 +91,7 @@ export class PostService {
 
     // Check if get post id is equal to post id in the array
     getPost(id: string) {
-      return this.http.get<{_id: string, title: string, content: string}>(this.localPath + '/api/posts/' + id);
+      return this.http.get<{_id: string, title: string, content: string, imagePath: string }>(this.localPath + '/api/posts/' + id);
     }
     // delete the post
     deletePost(postId: string) {
