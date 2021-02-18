@@ -27,7 +27,8 @@ export class PostService {
             return {
               title: post.title,
               content: post.content,
-              id: post._id
+              id: post._id,
+              imagePath: post.imagePath,
             };
           });
         }))
@@ -42,9 +43,9 @@ export class PostService {
         postData.append('title', title);
         postData.append('content', content);
         postData.append('image', image, title);
-        this.http.post<{message: string, postId: string}>(this.localPath + '/api/posts', postData)
+        this.http.post<{message: string, post: Post}>(this.localPath + '/api/posts', postData)
             .subscribe((respondData) => {
-                const post: Post = {id: respondData.postId, title: title, content: content};
+                const post: Post = {id: respondData.post.id, title: title, content: content, imagePath: respondData.post.imagePath};
                 // const id = respondData.postId;
                 // post.id = id;
                 this.posts.push(post);
@@ -54,8 +55,8 @@ export class PostService {
         
     }
     // Update the post in edit mode 
-    updatePost(id: string, title: string, content: string) {
-      const post: Post = { id: id, title: title, content: content};
+    updatePost(id: string, title: string, content: string, image: File) {
+      const post: Post = { id: id, title: title, content: content, imagePath: ''};
       this.http.put(this.localPath + '/api/posts/' + id, post)
       .subscribe(respond => {
         //mainly update the list
