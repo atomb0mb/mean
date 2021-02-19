@@ -75,8 +75,20 @@ router.put('/:id', multer({storage: storage}).single("image"), (req, res, next) 
 })
 
 // get post list
-router.get('', (req, res, next) =>{
-    Post.find().then(document =>{
+router.get('', (req, res, next) => {
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const postQuery = Post.find();
+    // to verify visit http://localhost:3000/api/posts?pagesize=2&page=2 
+    if(pageSize && currentPage){
+        // to display the posts 
+        postQuery
+        // to skip the previous page item depends on the current page
+        .skip(pageSize * (currentPage - 1))
+        // to narrow down the retrieve for current page
+        .limit(pageSize);
+    }
+    postQuery.find().then(document => {
         res.status(200).json({
             message: 'Posts fetched successfully',
             posts: document
