@@ -76,7 +76,7 @@ router.put('/:id', multer({storage: storage}).single("image"), (req, res, next) 
 
 // get post list
 router.get('', (req, res, next) => {
-    const pageSize = +req.query.pagesize;
+    const pageSize = +req.query.pagesize; // *important* this is query name we set
     const currentPage = +req.query.page;
     const postQuery = Post.find();
     // to verify visit http://localhost:3000/api/posts?pagesize=2&page=2 

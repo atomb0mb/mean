@@ -16,7 +16,8 @@ export class PostListComponent implements OnInit,OnDestroy {
 
     // pagination
     totalPosts = 10;
-    postPerPage = 2; // default
+    currentPage = 1;
+    postsPerPage = 2; // default
     customPageSize = [1, 2, 5, 10]
 
     // loading spinner
@@ -34,7 +35,7 @@ export class PostListComponent implements OnInit,OnDestroy {
     }
 
     ngOnInit(){
-        this.postService.getPosts();
+        this.postService.getPosts(this.postsPerPage, this.currentPage);
         this.isLoading = true;
         this.postSubscription = this.postService.getPostUpdateListener()
         .subscribe((subposts: Post[]) => {
@@ -48,7 +49,9 @@ export class PostListComponent implements OnInit,OnDestroy {
     }
 
     onChange(pageData: PageEvent){
-
+        this.currentPage = pageData.pageIndex + 1;
+        this.postsPerPage =pageData.pageSize;
+        this.postService.getPosts(this.postsPerPage, this.currentPage);
     }
 
     ngOnDestroy(){
