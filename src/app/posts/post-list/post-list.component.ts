@@ -15,7 +15,7 @@ export class PostListComponent implements OnInit,OnDestroy {
     private postSubscription: Subscription;
 
     // pagination
-    totalPosts = 10;
+    totalPosts = 0;
     currentPage = 1;
     postsPerPage = 2; // default
     customPageSize = [1, 2, 5, 10]
@@ -38,19 +38,25 @@ export class PostListComponent implements OnInit,OnDestroy {
         this.postService.getPosts(this.postsPerPage, this.currentPage);
         this.isLoading = true;
         this.postSubscription = this.postService.getPostUpdateListener()
-        .subscribe((subposts: Post[]) => {
+        .subscribe((subpostsData: {posts: Post[], postCount: number}) => {
             this.isLoading = false;
-            this.posts = subposts;
+            this.totalPosts = subpostsData.postCount;
+            this.posts = subpostsData.posts;
         })
     }
 
     onDelete(postId: string){
-        this.postService.deletePost(postId);
+        this.isLoading = true;
+        this.postService.deletePost(postId)
+        .subscribe(() => {
+            this.isLoading = false;
+            this.postService.getPosts(this.postsPerPage, this.currentPage);
+        });
     }
 
     onChange(pageData: PageEvent){
         this.currentPage = pageData.pageIndex + 1;
-        this.postsPerPage =pageData.pageSize;
+        this.postsPerPage = pageData.pageSize;
         this.postService.getPosts(this.postsPerPage, this.currentPage);
     }
 

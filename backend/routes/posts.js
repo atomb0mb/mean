@@ -1,6 +1,7 @@
 const express = require('express');
 const Post = require('../models/post');
 const multer = require('multer');
+const { DH_CHECK_P_NOT_PRIME } = require('constants');
 
 
 const router = express.Router();
@@ -79,6 +80,7 @@ router.get('', (req, res, next) => {
     const pageSize = +req.query.pagesize; // *important* this is query name we set
     const currentPage = +req.query.page;
     const postQuery = Post.find();
+    let fetchPost;
     // to verify visit http://localhost:3000/api/posts?pagesize=2&page=2 
     if(pageSize && currentPage){
         // to display the posts 
@@ -88,10 +90,14 @@ router.get('', (req, res, next) => {
         // to narrow down the retrieve for current page
         .limit(pageSize);
     }
-    postQuery.find().then(document => {
+    postQuery.then(documents => {
+        fetchPost = documents;
+        return Post.countDocuments();
+    }).then(count => {
         res.status(200).json({
             message: 'Posts fetched successfully',
-            posts: document
+            posts: fetchPost,
+            maxPosts: count
      
         });
     })

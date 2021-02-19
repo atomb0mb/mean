@@ -9,9 +9,11 @@ mat-spinner {
 
 mat-paginator {
     margin-top: 1rem;
+    
 }
 
 .info-text{
+    margin-top: 1rem;
     text-align: center;
 }
 
