@@ -29,3 +29,6 @@ Pre-req: Log into MongoDB account
 
 Mongoose
 [QUERIES](https://mongoosejs.com/docs/api/query.html)
+
+
+Multer [Docs] (https://github.com/expressjs/multer)

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Post } from '../post.model';
 import { PostService } from '../post.service';
 import { Subscription } from 'rxjs';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-post-list',
@@ -12,10 +13,20 @@ import { Subscription } from 'rxjs';
 
 export class PostListComponent implements OnInit,OnDestroy {
     private postSubscription: Subscription;
-    isLoading = false;
-    posts: Post[] = []; // taking the input from app component such as storedposts 
-    // postService: PostService;
 
+    // pagination
+    totalPosts = 10;
+    postPerPage = 2; // default
+    customPageSize = [1, 2, 5, 10]
+
+    // loading spinner
+    isLoading = false;
+
+    // taking the input from app component such as storedposts 
+    posts: Post[] = []; 
+
+
+    // postService: PostService;
     //added public keyword thhus no need to create declare and initalize in contstructor. This is typescript feature.
     constructor(public postService: PostService){
         // this.postService = postService;
@@ -34,6 +45,10 @@ export class PostListComponent implements OnInit,OnDestroy {
 
     onDelete(postId: string){
         this.postService.deletePost(postId);
+    }
+
+    onChange(pageData: PageEvent){
+
     }
 
     ngOnDestroy(){
