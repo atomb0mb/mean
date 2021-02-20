@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 
@@ -21,6 +21,7 @@ import { HeaderComponent } from './header/header.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostService } from './posts/post.service';
 import { AppRoutingModule } from './app-routing.module';
+import { LoginComponent } from './auth/login/login.component';
 
 
 
@@ -30,11 +31,13 @@ import { AppRoutingModule } from './app-routing.module';
     PostCreateComponent,
     HeaderComponent,
     PostListComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
 
