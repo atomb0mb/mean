@@ -7,7 +7,7 @@ const user = require('../models/user');
 const router = express.Router();
 
 // create an account
-router.post('/signup', (res, req, next) => {
+router.post('/signup', (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
         const user = new User({
@@ -30,9 +30,11 @@ router.post('/signup', (res, req, next) => {
     })
 })
 
-router.post('/login', (res, req, next) => {
+router.post('/login', (req, res, next) => {
+    let fetchUser;
     User.findOne({ email: req.body.email})
     .then(user => {
+        fetchUser = user;
         if(!user) {
             return res.status(401).json({
                 message: 'Auth failed'
@@ -45,7 +47,10 @@ router.post('/login', (res, req, next) => {
                 message: 'Auth failed'
             })
         }
-        const token = jwt.sign({email: user.email, userId: user._id}, 'secret_this_is_longer', {expiresIn: '30m'});
+        const token = jwt.sign({email: fetchUser.email, userId: fetchUser._id}, 'secret_this_is_longer', { expiresIn: '30m' });
+        res.status(200).json({
+            token: token
+        })
     }).catch(err => {
         return res.status(401).json({
             message: 'Err - Auth failed'
