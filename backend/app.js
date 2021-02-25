@@ -6,6 +6,7 @@ const express = require('express');
 const app = express();
 const key = require('./key');
 const postRoutes = require('./routes/posts');
+const userRoutes = require('./routes/user');
 
 
 // username & password need to be replace 
@@ -33,5 +34,6 @@ app.use('/api/posts', (req, res, next) =>{
 })
 
 app.use('/api/posts', postRoutes);
+app.use('/api/user', userRoutes);
 
 module.exports = app;
