@@ -27,7 +27,7 @@ app.use('/images', express.static(path.join('backend/images')));
 // To prevent Cross Origin Resource Sharing errors
 app.use((req, res, next) =>{
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'); // all
 
     next();
