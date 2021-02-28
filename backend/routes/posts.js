@@ -1,7 +1,7 @@
 const express = require('express');
 const Post = require('../models/post');
 const multer = require('multer');
-const { DH_CHECK_P_NOT_PRIME } = require('constants');
+const checkAuth = require('../middleware/check-auth');
 
 
 const router = express.Router();
@@ -31,7 +31,9 @@ const storage = multer.diskStorage({
 
 
 // post a new post
-router.post('', multer({storage: storage}).single("image"),(req, res, next) => {
+router.post('',
+    checkAuth,
+    multer({storage: storage}).single("image"),(req, res, next) => {
     const url = req.protocol + '://' + req.get("host");
     const post = new Post({
         title: req.body.title,
@@ -54,7 +56,9 @@ router.post('', multer({storage: storage}).single("image"),(req, res, next) => {
 })
 
 // update or edit the selected post with unique id
-router.put('/:id', multer({storage: storage}).single("image"), (req, res, next) => {
+router.put('/:id',
+    checkAuth,
+    multer({storage: storage}).single("image"), (req, res, next) => {
     let imageUrl = req.body.imagePath;
     if(req.file) {
         const url = req.protocol + '://' + req.get("host");
@@ -114,8 +118,8 @@ router.get('/:id', (req, res, next) => {
 
 });
 
-// delete
-router.delete("/:id", (req, res, next) => {
+// delete the post
+router.delete("/:id", checkAuth, (req, res, next) => {
     Post.deleteOne({ _id: req.params.id }).then(result => {
       //console.log(result);
       res.status(200).json({ message: "Post deleted!" });
