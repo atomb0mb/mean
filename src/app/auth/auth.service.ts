@@ -13,6 +13,8 @@ export class AuthService {
 
     private isAuthenticated = false;
 
+    private tokenTimer: any; // to reset the token timer when log out
+
     // to serve as different status listerner for login or logout display
     private authStatusListener = new Subject<boolean>();
 
@@ -43,14 +45,18 @@ export class AuthService {
     // http request for login 
     login(email: string, password: string) {
         const authData: AuthData = { email: email, password: password};
-        this.http.post<{ token: string }>(this.apilocalPath + 'user/login', authData).subscribe(response => {
+        this.http.post<{ token: string, expiresIn: number }>(this.apilocalPath + 'user/login', authData).subscribe(response => {
             // response like this from routes/user
             // res.status(200).json({
             //      token: token
             // })
-            const restoken = response.token; // this requires the <{ token: string }> to works
+            const restoken = response.token; // this requires the  generic <{ token: string }> to works
             this.token = restoken;
             if(restoken) {
+                const expiresInDuration = response.expiresIn;
+                this.tokenTimer = setTimeout(() => {
+                    this.logout();
+                }, expiresInDuration * 1000) // because it is in milliseconds
                 this.isAuthenticated = true;
                 this.authStatusListener.next(true);
                 this.router.navigate(['/']);
@@ -61,12 +67,14 @@ export class AuthService {
     }
 
     // logout to clear the token and set auth status to false
-    logout(){
+    logout() {
 
         this.token = null;
         this.isAuthenticated = false;
         this.authStatusListener.next(false);
+        clearTimeout(this.tokenTimer);
         this.router.navigate(['/']);
+        
     }
 
 }
