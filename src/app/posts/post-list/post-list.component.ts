@@ -3,6 +3,7 @@ import { Post } from '../post.model';
 import { PostService } from '../post.service';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
     selector: 'app-post-list',
@@ -13,6 +14,9 @@ import { PageEvent } from '@angular/material/paginator';
 
 export class PostListComponent implements OnInit,OnDestroy {
     private postSubscription: Subscription;
+    private authStatSub: Subscription;
+
+    userIsAuthenticated = false;
 
     // pagination
     totalPosts = 0;
@@ -29,7 +33,7 @@ export class PostListComponent implements OnInit,OnDestroy {
 
     // postService: PostService;
     //added public keyword thhus no need to create declare and initalize in contstructor. This is typescript feature.
-    constructor(public postService: PostService){
+    constructor(public postService: PostService, private authService: AuthService){
         // this.postService = postService;
         
     }
@@ -42,6 +46,10 @@ export class PostListComponent implements OnInit,OnDestroy {
             this.isLoading = false;
             this.totalPosts = subpostsData.postCount;
             this.posts = subpostsData.posts;
+        })
+        this.userIsAuthenticated = this.authService.getIsAuth();
+        this.authStatSub = this.authService.getAuthStatListerner().subscribe(authenticated => {
+            this.userIsAuthenticated = authenticated;
         })
     }
 
@@ -62,6 +70,7 @@ export class PostListComponent implements OnInit,OnDestroy {
 
     ngOnDestroy(){
         this.postSubscription.unsubscribe();
+        this.authStatSub.unsubscribe();
     }
    
 }

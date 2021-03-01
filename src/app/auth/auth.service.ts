@@ -10,10 +10,16 @@ export class AuthService {
 
     private token: string;
 
+    private isAuthenticated = false;
+
     // to serve as different status listerner for login or logout display
     private authStatusListener = new Subject<boolean>();
 
     constructor(private http: HttpClient) {}
+
+    getIsAuth(){
+        return this.isAuthenticated;
+    }
 
     getAuthStatListerner(){
         return this.authStatusListener.asObservable();
@@ -43,7 +49,11 @@ export class AuthService {
             // })
             const restoken = response.token; // this requires the <{ token: string }> to works
             this.token = restoken;
-            this.authStatusListener.next(true);
+            if(restoken) {
+                this.isAuthenticated = true;
+                this.authStatusListener.next(true);
+            }
+            
         })
 
     }
