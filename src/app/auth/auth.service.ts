@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { AuthData } from './auth-data.model';
 
 @Injectable({providedIn: 'root'})
@@ -9,7 +10,14 @@ export class AuthService {
 
     private token: string;
 
+    // to serve as different status listerner for login or logout display
+    private authStatusListener = new Subject<boolean>();
+
     constructor(private http: HttpClient) {}
+
+    getAuthStatListerner(){
+        return this.authStatusListener.asObservable();
+    }
 
     // to get the token
     getToken(){
@@ -35,6 +43,7 @@ export class AuthService {
             // })
             const restoken = response.token; // this requires the <{ token: string }> to works
             this.token = restoken;
+            this.authStatusListener.next(true);
         })
 
     }
