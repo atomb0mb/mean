@@ -58,4 +58,12 @@ export class AuthService {
 
     }
 
+    // logout to clear the token and set auth status to false
+    logout(){
+
+        this.token = null;
+        this.isAuthenticated = false;
+        this.authStatusListener.next(false);
+    }
+
 }
