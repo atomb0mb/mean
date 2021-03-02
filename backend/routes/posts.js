@@ -88,6 +88,10 @@ router.put('/:id',
                 message: 'Post update failed',
             });
         }
+    }).catch(error => {
+        res.status(500).json({
+            message: "Updating post failed"
+        })
     })
     
 
@@ -118,6 +122,10 @@ router.get('', (req, res, next) => {
             maxPosts: count
      
         });
+    }).catch(error => {
+        res.status(500).json({
+            message: "Fetching posts failed"
+        })
     })
 })
 // get a post
@@ -128,6 +136,10 @@ router.get('/:id', (req, res, next) => {
         } else {
             res.status(404).json({ message: "Post not found!" });
         }
+    }).catch(error => {
+        res.status(500).json({
+            message: "Fetching post failed"
+        })
     })
 
 });
@@ -143,7 +155,11 @@ router.delete("/:id", checkAuth, (req, res, next) => {
           res.status(401).json({ message: "Not authorized!" });
         }
       }
-    );
+    ).catch(error => {
+        res.status(500).json({
+            message: "Deleting post failed"
+        })
+    });
   });
   
   
