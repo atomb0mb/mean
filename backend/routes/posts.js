@@ -43,8 +43,6 @@ router.post('',
         //this okay
     });
 
-    console.log(post);
-
     post.save().then(createdPost => {
         res.status(201).json({
             message: 'Post added successfully',
