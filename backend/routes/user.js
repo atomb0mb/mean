@@ -45,6 +45,10 @@ router.post('/login', (req, res, next) => {
         if(!result) {
             return res.status(401).json({
                 message: 'Auth failed'
+            }).catch(error => {
+                res.status(500).json({
+                    message: "Couldn''t' update post"
+                })
             })
         }
         const token = jwt.sign({email: fetchUser.email, userId: fetchUser._id}, 'secret_this_is_longer', { expiresIn: '30m' });
