@@ -84,7 +84,7 @@ export class PostService {
 
     // Check if get post id is equal to post id in the array
     getPost(id: string) {
-      return this.http.get<{_id: string, title: string, content: string, imagePath: string, creator: string }>(this.localPath + '/api/posts/' + id);
+      return this.http.get<{_id: string; title: string; content: string; imagePath: string; creator: string; }>(this.localPath + '/api/posts/' + id);
     }
     // delete the post
     deletePost(postId: string) {
