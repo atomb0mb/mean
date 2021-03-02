@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {  
 
-      this.authService.AutoLogin();
+      this.authService.autoLogin();
     
   }
   title = 'meanstack'

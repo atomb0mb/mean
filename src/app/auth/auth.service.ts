@@ -27,6 +27,7 @@ export class AuthService {
         return this.isAuthenticated;
     }
 
+    // To receive the event
     getAuthStatListerner(){
         return this.authStatusListener.asObservable();
     }
@@ -48,7 +49,10 @@ export class AuthService {
 
         this.http.post<{ email: string }>(this.apilocalPath +'user/signup', authData).subscribe(response => {
             //console.log(response);
+
             this.router.navigate(['/']);
+        }, error => {
+            this.authStatusListener.next(false);
         })
     }
 
@@ -79,11 +83,13 @@ export class AuthService {
                 this.router.navigate(['/']);
             }
             
+        }, error => {
+            this.authStatusListener.next(false);
         })
 
     }
     // auto auth user or auto login if token exists
-    AutoLogin(){
+    autoLogin(){
         const authInformation = this.getAuthData();
 
         // It should not auto-login if the local storage is empty..
