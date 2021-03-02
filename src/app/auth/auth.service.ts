@@ -13,6 +13,8 @@ export class AuthService {
 
     private isAuthenticated = false;
 
+    private userID: string;
+
     private tokenTimer: any; // to reset the token timer when log out
 
     // to serve as different status listerner for login or logout display
@@ -34,6 +36,12 @@ export class AuthService {
         return this.token;
     }
 
+    // get user ID
+
+    getUserID() {
+        return this.userID;
+    }
+
     // http request for creating the user account
     createUser(email: string, password: string) {
         const authData: AuthData = { email: email, password: password};
@@ -47,7 +55,7 @@ export class AuthService {
     // http request for login 
     login(email: string, password: string) {
         const authData: AuthData = { email: email, password: password};
-        this.http.post<{ token: string, expiresIn: number }>(this.apilocalPath + 'user/login', authData).subscribe(response => {
+        this.http.post<{ token: string, expiresIn: number, userId: string }>(this.apilocalPath + 'user/login', authData).subscribe(response => {
             // response like this from routes/user
             // res.status(200).json({
             //      token: token
@@ -59,12 +67,13 @@ export class AuthService {
                 const expiresInDuration = response.expiresIn;
                 this.setAuthTimerHelper(expiresInDuration);
                 this.isAuthenticated = true;
+                this.userID = response.userId; 
                 this.authStatusListener.next(true);
 
                 // Coverting time to date and save token to local storage
                 const currentDate = new Date();
                 const expirationDate =  new Date(currentDate.getTime() + (expiresInDuration * 1000));
-                this.saveAuthData(restoken, expirationDate);
+                this.saveAuthData(restoken, expirationDate, this.userID);
 
                 this.router.navigate(['/']);
             }
@@ -93,6 +102,7 @@ export class AuthService {
             this.token = authInformation.token;
             this.isAuthenticated = true;
             this.setAuthTimerHelper(expiresIn / 1000);
+            this.userID = authInformation.userId;
             this.authStatusListener.next(true);
         }
     }
@@ -105,21 +115,24 @@ export class AuthService {
         this.isAuthenticated = false;
         this.authStatusListener.next(false);
         clearTimeout(this.tokenTimer);
+        this.userID = null; // reset if user logout
         this.clearAuthData();
         this.router.navigate(['/']);
         
     }
 
     // save token in local storage
-    private saveAuthData(token: string, expirationDate: Date){
+    private saveAuthData(token: string, expirationDate: Date, userId: string){
         localStorage.setItem('token', token);
         localStorage.setItem('expiration', expirationDate.toISOString());
+        localStorage.setItem('userId', userId);
     }
 
     // clear token in local storage when clicks logout
     private clearAuthData() {
         localStorage.removeItem('token');
         localStorage.removeItem('expiration');
+        localStorage.removeItem('userId');
     }
 
     // Retrieve token from local storage 
@@ -127,13 +140,14 @@ export class AuthService {
 
         const token = localStorage.getItem('token');
         const expirationDate = localStorage.getItem('expiration');
+        const userId = localStorage.getItem('userId');
 
         if(!token || !expirationDate) {
             // to handle in case user cleared the cache/local storage manually via Devtools
             this.logout();
             return;
         }
-        return { token: token, expirationDate: new Date(expirationDate)} 
+        return { token: token, expirationDate: new Date(expirationDate), userId: userId} 
     }
     // helper to set timer
     private setAuthTimerHelper(duration: number){
