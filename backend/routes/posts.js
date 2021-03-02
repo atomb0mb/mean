@@ -59,7 +59,8 @@ router.post('',
 // update or edit the selected post with unique id
 router.put('/:id',
     checkAuth,
-    multer({storage: storage}).single("image"), (req, res, next) => {
+    multer({storage: storage}).single("image"), 
+    (req, res, next) => {
     let imageUrl = req.body.imagePath;
     if(req.file) {
         const url = req.protocol + '://' + req.get("host");
@@ -71,10 +72,16 @@ router.put('/:id',
         content: req.body.content,
         imagePath: imageUrl 
     })
-    Post.updateOne({_id: req.params.id}, newPost ).then( result => {
-        res.status(200).json({
-            message: 'Post updated successfully',
-        });
+    Post.updateOne({_id: req.params.id, creator: req.userData.userId }, newPost ).then( result => {
+        if(result.nModified > 0) {
+            res.status(200).json({
+                message: 'Post updated successfully',
+            });
+        } else  {
+            res.status(401).json({
+                message: 'Post update failed',
+            });
+        }
     })
     
 
@@ -121,9 +128,12 @@ router.get('/:id', (req, res, next) => {
 
 // delete the post
 router.delete("/:id", checkAuth, (req, res, next) => {
-    Post.deleteOne({ _id: req.params.id }).then(result => {
-      //console.log(result);
-      res.status(200).json({ message: "Post deleted!" });
+    Post.deleteOne({ _id: req.params.id, creator: req.userData.userId  }).then(result => {
+      if(result.nModified > 0) {
+        res.status(200).json({ message: "Post deleted!" });
+      } else {
+        res.status(401).json({ message: "Not authorized to delete" }); 
+      }
     });
 });
   

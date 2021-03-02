@@ -39,7 +39,8 @@ export class AuthService {
         const authData: AuthData = { email: email, password: password};
 
         this.http.post<{ email: string }>(this.apilocalPath +'user/signup', authData).subscribe(response => {
-            console.log(response);
+            //console.log(response);
+            this.router.navigate(['/']);
         })
     }
 
@@ -114,7 +115,7 @@ export class AuthService {
         localStorage.setItem('token', token);
         localStorage.setItem('expiration', expirationDate.toISOString());
     }
-    
+
     // clear token in local storage when clicks logout
     private clearAuthData() {
         localStorage.removeItem('token');
