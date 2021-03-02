@@ -48,10 +48,11 @@ router.post('/login', (req, res, next) => {
             })
         }
         const token = jwt.sign({email: fetchUser.email, userId: fetchUser._id}, 'secret_this_is_longer', { expiresIn: '30m' });
+        console.log(fetchUser.userId);
         res.status(200).json({
             token: token,
             expiresIn: 1800,
-            userId: token.userId,
+            userId: fetchUser._id, // spent couple hours to find this issue... it was fetchUser.userId that gives me 'undefined'
         })
     }).catch(err => {
         return res.status(401).json({

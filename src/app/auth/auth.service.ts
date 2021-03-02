@@ -61,13 +61,14 @@ export class AuthService {
             //      token: token
             // })
             const restoken = response.token; // this requires the  generic <{ token: string }> to works
+
             this.token = restoken;
             if(restoken) {
 
                 const expiresInDuration = response.expiresIn;
                 this.setAuthTimerHelper(expiresInDuration);
                 this.isAuthenticated = true;
-                this.userID = response.userId; 
+                this.userID = response.userId;
                 this.authStatusListener.next(true);
 
                 // Coverting time to date and save token to local storage
