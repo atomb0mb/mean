@@ -32,3 +32,23 @@ Mongoose
 
 
 Multer [Docs] (https://github.com/expressjs/multer)
+
+NodeJs - Nodemon
+Instead of restarting the server frequently due to change, there is a script for node.js to auto refresh the change
+
+Installation: https://www.npmjs.com/package/nodemon
+
+Include the script in package.json
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+
+In case "NODEMON — app crashed — waiting for file changes before starting" show up
+Reason for that because sometimes PC running several processes in the Background. So you need to stop all the node process that are running:
+
+pkill -f node 
+
+or
+
+sudo lsof -i :3000 //replace 3000 with your port number
+sudo kill -9 31363 // replace 31363 with your PID
