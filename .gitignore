@@ -46,4 +46,4 @@ testem.log
 Thumbs.db
 
 # user and password for mongodb
-key.js
+nodemon.json

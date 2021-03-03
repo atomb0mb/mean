@@ -10,7 +10,7 @@ const userRoutes = require('./routes/user');
 
 
 // username & password need to be replace 
-mongoose.connect('mongodb+srv://'+ key.dbaccess.user +':'+ key.dbaccess.password +'@cluster0.xil5u.mongodb.net/node-angular?retryWrites=true&w=majority', { useNewUrlParser: true })
+mongoose.connect('mongodb+srv://'+ process.env.MONGO_DB_USR +':'+ process.env.MONGO_ATLAS_PW +'@cluster0.xil5u.mongodb.net/node-angular?retryWrites=true&w=majority', { useNewUrlParser: true })
 .then(() => {
     console.log('Connected to database')
 })

@@ -49,7 +49,7 @@ exports.userLogin = (req, res, next) => {
                 })
             })
         }
-        const token = jwt.sign({email: fetchUser.email, userId: fetchUser._id}, 'secret_this_is_longer', { expiresIn: '30m' });
+        const token = jwt.sign({email: fetchUser.email, userId: fetchUser._id}, process.env.JWT_KEY, { expiresIn: '30m' });
         res.status(200).json({
             token: token,
             expiresIn: 1800,
