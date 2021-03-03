@@ -5,12 +5,13 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment'
 
 @Injectable({providedIn: 'root'}) // This is alternative solution for adding postService in app module provider
 export class PostService {
     private posts: Post[] = [];
     private postUpdated = new Subject<{posts: Post[], postCount: number}>();
-    private localPath = 'http://localhost:3000';
+    private localPath = environment.apiUrl;
 
     constructor(private http: HttpClient, private router: Router ){
  
@@ -21,7 +22,7 @@ export class PostService {
       const queryParams = `?pagesize=${postPerPage}&page=${currentPage}`;
         this.http
         .get<{ message: string; posts: any, maxPosts: number }>(
-          "http://localhost:3000/api/posts" + queryParams
+          this.localPath + "posts" + queryParams
         )
         .pipe(map((postData) => {
           return { 
@@ -48,7 +49,7 @@ export class PostService {
         postData.append('title', title);
         postData.append('content', content);
         postData.append('image', image, title);
-        this.http.post<{message: string, post: Post}>(this.localPath + '/api/posts', postData)
+        this.http.post<{message: string, post: Post}>(this.localPath + 'posts', postData)
             .subscribe((respondData) => {
                 this.router.navigate(['/']);
             });
@@ -72,7 +73,7 @@ export class PostService {
           creator: null // do not handle it here because it handles on server side for better security
         }
       }
-      this.http.put(this.localPath + '/api/posts/' + id, postData)
+      this.http.put(this.localPath + 'posts/' + id, postData)
       .subscribe(respond => {
         this.router.navigate(["/"]);
       })
@@ -84,10 +85,10 @@ export class PostService {
 
     // Check if get post id is equal to post id in the array
     getPost(id: string) {
-      return this.http.get<{_id: string; title: string; content: string; imagePath: string; creator: string; }>(this.localPath + '/api/posts/' + id);
+      return this.http.get<{_id: string; title: string; content: string; imagePath: string; creator: string; }>(this.localPath + 'posts/' + id);
     }
     // delete the post
     deletePost(postId: string) {
-        return this.http.delete(this.localPath + '/api/posts/' + postId);
+        return this.http.delete(this.localPath + 'posts/' + postId);
     }
 }

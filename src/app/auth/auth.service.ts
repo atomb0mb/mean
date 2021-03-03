@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AuthData } from './auth-data.model';
+import { environment } from '../../environments/environment'
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
-    private apilocalPath = 'http://localhost:3000/api/';
+    private apilocalPath = environment.apiUrl;
 
     private token: string;
 
