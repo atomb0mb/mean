@@ -4,7 +4,6 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
-const key = require('./key');
 const postRoutes = require('./routes/posts');
 const userRoutes = require('./routes/user');
 
@@ -21,7 +20,7 @@ mongoose.connect('mongodb+srv://'+ process.env.MONGO_DB_USR +':'+ process.env.MO
 //npm install --save body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use('/images', express.static(path.join('backend/images')));
+app.use('/images', express.static(path.join('images')));
 
 
 // To prevent Cross Origin Resource Sharing errors
