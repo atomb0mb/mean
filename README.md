@@ -1,5 +1,7 @@
 # MEAN STACK web application
 
+MEAN stands for MongoDB, Express, Angular, and NodeJs. From front-end to back end, MEAN stack is a combination of a database server, server-side JavaScript framework, client-side JavaScript framework, and JavaScript runtime.
+
 demo: http://cwng-node-angular.s3-website.us-east-2.amazonaws.com/
 
 ### Quick start
