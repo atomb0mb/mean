@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Post } from '../post.model';
 import { PostService } from '../post.service';
 import { Subscription } from 'rxjs';
+import { PageEvent } from '@angular/material/paginator';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
     selector: 'app-post-list',
@@ -12,25 +14,71 @@ import { Subscription } from 'rxjs';
 
 export class PostListComponent implements OnInit,OnDestroy {
     private postSubscription: Subscription;
-    posts: Post[] = []; // taking the input from app component such as storedposts 
-    // postService: PostService;
+    private authStatSub: Subscription;
 
+    // For signal if user is authenticated
+    userIsAuthenticated = false;
+
+    // To pass user id 
+    userId: string;
+
+
+    // pagination
+    totalPosts = 0;
+    currentPage = 1;
+    postsPerPage = 2; // default
+    customPageSize = [1, 2, 5, 10]
+
+    // loading spinner
+    isLoading = false;
+
+    // taking the input from app component such as storedposts 
+    posts: Post[] = []; 
+
+
+    // postService: PostService;
     //added public keyword thhus no need to create declare and initalize in contstructor. This is typescript feature.
-    constructor(public postService: PostService){
+    constructor(public postService: PostService, private authService: AuthService){
         // this.postService = postService;
         
     }
 
     ngOnInit(){
-        this.posts = this.postService.getPosts();
-
-        this.postSubscription = this.postService.getPostUpdateListener().subscribe((subposts: Post[]) => {
-            this.posts = subposts;
+        this.postService.getPosts(this.postsPerPage, this.currentPage);
+        this.isLoading = true;
+        
+        this.userId = this.authService.getUserID();
+        this.postSubscription = this.postService.getPostUpdateListener()
+        .subscribe((subpostsData: {posts: Post[], postCount: number}) => {
+            this.isLoading = false;
+            this.totalPosts = subpostsData.postCount;
+            this.posts = subpostsData.posts;
         })
+        this.userIsAuthenticated = this.authService.getIsAuth();
+        this.authStatSub = this.authService.getAuthStatListerner().subscribe(authenticated => {
+            this.userIsAuthenticated = authenticated;
+            this.userId = this.authService.getUserID();
+        })
+    }
+
+    onDelete(postId: string){
+        this.isLoading = true;
+        this.postService.deletePost(postId)
+        .subscribe(() => {
+            this.isLoading = false;
+            this.postService.getPosts(this.postsPerPage, this.currentPage);
+        });
+    }
+
+    onChange(pageData: PageEvent){
+        this.currentPage = pageData.pageIndex + 1;
+        this.postsPerPage = pageData.pageSize;
+        this.postService.getPosts(this.postsPerPage, this.currentPage);
     }
 
     ngOnDestroy(){
         this.postSubscription.unsubscribe();
+        this.authStatSub.unsubscribe();
     }
    
 }
